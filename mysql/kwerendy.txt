@@ -1,0 +1,68 @@
+=========
+zadanie 1
+
+  SELECT RODZAJ_UMOWY, COUNT(PESEL_P) AS "ILOŚĆ"
+  FROM `zatrudnienie`
+  WHERE DATA >= "2020-12-10" OR DATA = FALSE
+  GROUP BY RODZAJ_UMOWY;
+
+
+=========
+zadanie 2
+
+  SELECT IMIE, NAZWISKO FROM pracownik
+  INNER JOIN zatrudnienie
+  ON pracownik.PESEL_P = zatrudnienie.PESEL_P
+  GROUP BY zatrudnienie.PESEL_P
+  ORDER BY COUNT(zatrudnienie.RODZAJ_UMOWY) DESC
+  LIMIT 1;
+
+=========
+zadanie 3
+
+  SELECT IMIE, NAZWISKO FROM pracownik
+  INNER JOIN dziecko
+  ON pracownik.PESEL_P = dziecko.PESEL_P
+  AND pracownik.STAN_RODZINY = "S"
+  GROUP BY pracownik.PESEL_P
+  ORDER BY COUNT(pracownik.STAN_RODZINY) DESC
+  LIMIT 1;
+
+=========
+zadanie 4
+
+  SELECT IMIE, NAZWISKO FROM pracownik
+  WHERE PESEL_P != ALL
+    (SELECT PESEL_P FROM dziecko)
+  ORDER BY NAZWISKO;
+
+=========
+zadanie 5
+
+  SELECT SUM(bonus) AS "Bony dla pracownikow" FROM (
+      SELECT pracownik.STAN_RODZINY,
+      CASE
+          WHEN pracownik.STAN_RODZINY = "S"
+          THEN CASE
+              WHEN SUM(zatrudnienie.KWOTA_WYN) < 5000 THEN 700
+              WHEN SUM(zatrudnienie.KWOTA_WYN) BETWEEN 5000 AND 10000 THEN 400
+              WHEN SUM(zatrudnienie.KWOTA_WYN) > 10000 THEN 300
+              END
+          WHEN pracownik.STAN_RODZINY = "P"
+          THEN CASE
+              WHEN SUM(zatrudnienie.KWOTA_WYN) < 5000 THEN 500
+              WHEN SUM(zatrudnienie.KWOTA_WYN) BETWEEN 5000 AND 10000 THEN 200
+              WHEN SUM(zatrudnienie.KWOTA_WYN) > 10000 THEN 100
+              END
+      END AS bonus FROM zatrudnienie
+
+      INNER JOIN pracownik
+      ON zatrudnienie.PESEL_P = pracownik.PESEL_P
+      INNER JOIN dziecko
+      ON zatrudnienie.PESEL_P = dziecko.PESEL_P
+
+      WHERE zatrudnienie.RODZAJ_UMOWY IN ("P", "N")
+      AND (zatrudnienie.DATA >= "2020-12-20" OR zatrudnienie.DATA = FALSE)
+      AND (dziecko.PESEL_D <= "203220%" OR (dziecko.PESEL_D > "991220%" AND dziecko.NAUKA = "T"))
+      GROUP BY zatrudnienie.PESEL_P
+  ) AS subquery;

@@ -1,6 +1,6 @@
 i = 0
 
-with open("./src/pracownik.txt", "r") as file:
+with open("../src/pracownik.txt", "r") as file:
     employee_data = file.readlines()
     del employee_data[0]
     for line in employee_data:
@@ -9,7 +9,7 @@ with open("./src/pracownik.txt", "r") as file:
         i+=1
     i = 0
 
-with open("./src/zatrudnienie.txt", "r") as file:
+with open("../src/zatrudnienie.txt", "r") as file:
     employment_data = file.readlines()
     del employment_data[0]
     for line in employment_data:
@@ -21,7 +21,7 @@ with open("./src/zatrudnienie.txt", "r") as file:
         i+=1
     i = 0
 
-with open("./src/dziecko.txt") as file:
+with open("../src/dziecko.txt") as file:
     child_data = file.readlines()
     del child_data[0]
     for line in child_data:

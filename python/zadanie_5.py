@@ -46,7 +46,7 @@ for parent in employees:
         if data > "2020-12-20" and data <= "1999-12-20":
             continue
 
-        if data > "1999-12-20" and data <= "2002-12-20":
+        if data > "1999-12-20" or data <= "2002-12-20":
             if child[3] == "N":
                 continue
 
