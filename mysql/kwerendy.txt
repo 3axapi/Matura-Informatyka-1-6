@@ -66,3 +66,31 @@ zadanie 5
       AND (dziecko.PESEL_D <= "203220%" OR (dziecko.PESEL_D > "991220%" AND dziecko.NAUKA = "T"))
       GROUP BY zatrudnienie.PESEL_P
   ) AS subquery;
+
+SELECT SUM(bonus) AS "Bony dla pracownikow" FROM (
+      SELECT pracownik.PESEL_P, pracownik.STAN_RODZINY,
+      CASE
+          WHEN pracownik.STAN_RODZINY = "S"
+          THEN CASE
+              WHEN SUM(zatrudnienie.KWOTA_WYN) < 5000 THEN 700
+              WHEN SUM(zatrudnienie.KWOTA_WYN) BETWEEN 5000 AND 10000 THEN 400
+              WHEN SUM(zatrudnienie.KWOTA_WYN) > 10000 THEN 300
+              END
+          WHEN pracownik.STAN_RODZINY = "P"
+          THEN CASE
+              WHEN SUM(zatrudnienie.KWOTA_WYN) < 5000 THEN 500
+              WHEN SUM(zatrudnienie.KWOTA_WYN) BETWEEN 5000 AND 10000 THEN 200
+              WHEN SUM(zatrudnienie.KWOTA_WYN) > 10000 THEN 100
+              END
+      END AS bonus FROM zatrudnienie
+
+      INNER JOIN pracownik
+      ON zatrudnienie.PESEL_P = pracownik.PESEL_P
+      INNER JOIN dziecko
+      ON zatrudnienie.PESEL_P = dziecko.PESEL_P
+
+      WHERE zatrudnienie.RODZAJ_UMOWY IN ("P", "N")
+      AND (zatrudnienie.DATA >= "2020-12-20" OR zatrudnienie.DATA = FALSE)
+      AND (dziecko.PESEL_D > "023220" OR ((dziecko.PESEL_D > "991220" OR dziecko.PESEL_D <= "023212") AND dziecko.NAUKA = "T"))
+      GROUP BY zatrudnienie.PESEL_P
+  ) AS subquery;;
